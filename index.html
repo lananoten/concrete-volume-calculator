@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concrete Volume Calculator — Slabs, Footings, Post Holes, Walls</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+  h1 { font-size: 1.4rem; }
+  .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 1rem 0; }
+  .tabs button { padding: 0.5rem 0.9rem; font-size: 0.95rem; cursor: pointer; border: 1px solid #888; background: none; border-radius: 6px; }
+  .tabs button.active { font-weight: 700; border-width: 2px; }
+  label { display: block; margin: 0.7rem 0 0.25rem; font-weight: 600; }
+  input, select { width: 100%; padding: 0.5rem; font-size: 1rem; box-sizing: border-box; }
+  .calc-btn { margin-top: 1rem; padding: 0.65rem 1.4rem; font-size: 1rem; cursor: pointer; }
+  #results { margin-top: 1.25rem; padding: 1rem; border: 1px solid #888; border-radius: 8px; display: none; }
+  #results p { margin: 0.35rem 0; }
+  .big { font-size: 1.3rem; font-weight: 700; }
+  .shape { display: none; }
+  .shape.active { display: block; }
+  footer { margin-top: 2rem; font-size: 0.85rem; opacity: 0.8; }
+</style>
+</head>
+<body>
+  <h1>Concrete Volume Calculator</h1>
+  <p>Pick a shape, enter dimensions, and get cubic yards, an order quantity with waste buffer, and bag counts.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="active" onclick="showShape('slab', this)">Slab</button>
+    <button onclick="showShape('posthole', this)">Post Hole</button>
+    <button onclick="showShape('footing', this)">Trench Footing</button>
+    <button onclick="showShape('wall', this)">Wall</button>
+  </div>
+
+  <div id="shape-slab" class="shape active">
+    <label>Length (feet)<input id="slab-l" type="number" min="0" step="any" placeholder="e.g. 16"></label>
+    <label>Width (feet)<input id="slab-w" type="number" min="0" step="any" placeholder="e.g. 30"></label>
+    <label>Thickness (inches)<input id="slab-t" type="number" min="0" step="any" placeholder="e.g. 4"></label>
+  </div>
+
+  <div id="shape-posthole" class="shape">
+    <label>Hole diameter (inches)<input id="ph-dia" type="number" min="0" step="any" placeholder="e.g. 12"></label>
+    <label>Hole depth (inches)<input id="ph-depth" type="number" min="0" step="any" placeholder="e.g. 36"></label>
+    <label>Number of holes<input id="ph-count" type="number" min="1" step="1" placeholder="e.g. 6"></label>
+  </div>
+
+  <div id="shape-footing" class="shape">
+    <label>Trench width (inches)<input id="ft-w" type="number" min="0" step="any" placeholder="e.g. 16"></label>
+    <label>Trench depth (inches)<input id="ft-d" type="number" min="0" step="any" placeholder="e.g. 8"></label>
+    <label>Trench length (feet)<input id="ft-l" type="number" min="0" step="any" placeholder="e.g. 50"></label>
+  </div>
+
+  <div id="shape-wall" class="shape">
+    <label>Wall length (feet)<input id="w-l" type="number" min="0" step="any" placeholder="e.g. 20"></label>
+    <label>Wall height (feet)<input id="w-h" type="number" min="0" step="any" placeholder="e.g. 4"></label>
+    <label>Wall thickness (inches)<input id="w-t" type="number" min="0" step="any" placeholder="e.g. 8"></label>
+  </div>
+
+  <label>Waste buffer
+    <select id="waste">
+      <option value="0.05">5% — precise forms, level subgrade</option>
+      <option value="0.10" selected>10% — standard (recommended)</option>
+      <option value="0.15">15% — rough / hand-dug excavation</option>
+    </select>
+  </label>
+
+  <button class="calc-btn" onclick="calculate()">Calculate</button>
+
+  <div id="results" aria-live="polite"></div>
+
+  <footer>
+    Bag yields: 80 lb = 0.60 cu ft · 60 lb = 0.45 cu ft · 50 lb = 0.375 cu ft · 40 lb = 0.30 cu ft.
+    Over ~1.5–2 yd³, ready-mix delivery beats hand-mixing bags. Under ~4 yd³ expect a short-load fee.
+    For stairs, columns, rebar, block, gravel, and full cost estimation (30 free tools), see
+    <a href="https://concretecalcus.com/">concretecalcus.com</a>.
+  </footer>
+
+<script>
+let currentShape = 'slab';
+function showShape(name, btn) {
+  currentShape = name;
+  document.querySelectorAll('.shape').forEach(el => el.classList.remove('active'));
+  document.getElementById('shape-' + name).classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function val(id) { return parseFloat(document.getElementById(id).value); }
+
+function cubicFeet() {
+  if (currentShape === 'slab') {
+    const L = val('slab-l'), W = val('slab-w'), T = val('slab-t');
+    if (!(L > 0 && W > 0 && T > 0)) return null;
+    return L * W * (T / 12);
+  }
+  if (currentShape === 'posthole') {
+    const dia = val('ph-dia'), depth = val('ph-depth'), n = val('ph-count');
+    if (!(dia > 0 && depth > 0 && n > 0)) return null;
+    return Math.PI * Math.pow(dia / 24, 2) * (depth / 12) * n;
+  }
+  if (currentShape === 'footing') {
+    const w = val('ft-w'), d = val('ft-d'), l = val('ft-l');
+    if (!(w > 0 && d > 0 && l > 0)) return null;
+    return (w / 12) * (d / 12) * l;
+  }
+  if (currentShape === 'wall') {
+    const l = val('w-l'), h = val('w-h'), t = val('w-t');
+    if (!(l > 0 && h > 0 && t > 0)) return null;
+    return l * h * (t / 12);
+  }
+  return null;
+}
+
+function calculate() {
+  const box = document.getElementById('results');
+  const cuft = cubicFeet();
+  if (cuft === null) {
+    box.style.display = 'block';
+    box.innerHTML = '<p>Please enter positive numbers for all dimensions.</p>';
+    return;
+  }
+  const waste = parseFloat(document.getElementById('waste').value);
+  const yards = cuft / 27;
+  const order = yards * (1 + waste);
+  const bags = {
+    '80 lb': Math.ceil(cuft / 0.60),
+    '60 lb': Math.ceil(cuft / 0.45),
+    '50 lb': Math.ceil(cuft / 0.375),
+    '40 lb': Math.ceil(cuft / 0.30)
+  };
+  let truckNote = '';
+  if (order >= 10) truckNote = '<p><em>Note:</em> over one full 10-yd³ mixer load — plan multiple trucks or split pours.</p>';
+  else if (order < 4) truckNote = '<p><em>Note:</em> under ~4 yd³ usually incurs a short-load delivery fee ($75–$120).</p>';
+
+  box.style.display = 'block';
+  box.innerHTML =
+    '<p class="big">' + yards.toFixed(2) + ' cubic yards</p>' +
+    '<p>' + cuft.toFixed(1) + ' cubic feet</p>' +
+    '<p><strong>Order (with ' + Math.round(waste * 100) + '% waste):</strong> ' + order.toFixed(2) + ' cubic yards</p>' +
+    '<p><strong>Bags:</strong> ' + bags['80 lb'] + ' × 80 lb · ' + bags['60 lb'] + ' × 60 lb · ' +
+      bags['50 lb'] + ' × 50 lb · ' + bags['40 lb'] + ' × 40 lb</p>' +
+    truckNote;
+}
+</script>
+</body>
+</html>
