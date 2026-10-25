@@ -3,59 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Concrete Volume Calculator — Slabs, Footings, Post Holes, Walls</title>
+<title>Concrete Calculator — Free Slab, Footing, Post Hole, Wall &amp; Column Estimator</title>
+<meta name="description" content="Free concrete calculator for slabs, footings, post holes, walls and columns. Get cubic yards, cubic feet, bag counts and ready-mix truck loads in seconds — no signup.">
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
-  h1 { font-size: 1.4rem; }
-  .tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 1rem 0; }
-  .tabs button { padding: 0.5rem 0.9rem; font-size: 0.95rem; cursor: pointer; border: 1px solid #888; background: none; border-radius: 6px; }
-  .tabs button.active { font-weight: 700; border-width: 2px; }
-  label { display: block; margin: 0.7rem 0 0.25rem; font-weight: 600; }
-  input, select { width: 100%; padding: 0.5rem; font-size: 1rem; box-sizing: border-box; }
-  .calc-btn { margin-top: 1rem; padding: 0.65rem 1.4rem; font-size: 1rem; cursor: pointer; }
-  #results { margin-top: 1.25rem; padding: 1rem; border: 1px solid #888; border-radius: 8px; display: none; }
-  #results p { margin: 0.35rem 0; }
-  .big { font-size: 1.3rem; font-weight: 700; }
-  .shape { display: none; }
-  .shape.active { display: block; }
-  footer { margin-top: 2rem; font-size: 0.85rem; opacity: 0.8; }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;color:#1f2937;line-height:1.6;background:#f8fafc}
+  a{color:#c2410c}
+  header{background:#111827;color:#fff;padding:1rem}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 1rem}
+  header .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+  .logo{font-weight:800;font-size:1.2rem;color:#fff;text-decoration:none}
+  nav a{color:#e5e7eb;text-decoration:none;margin-right:1rem;font-size:.95rem}
+  .cta{background:#ea580c;color:#fff!important;padding:.55rem 1rem;border-radius:8px;text-decoration:none;display:inline-block;font-weight:700}
+  .hero{background:#1e293b;color:#fff;padding:3rem 0}
+  .hero h1{font-size:2.2rem;line-height:1.2;margin:.2rem 0 1rem}
+  .hero p{color:#e2e8f0;max-width:760px}
+  .badges span{display:inline-block;background:#334155;border:1px solid #475569;border-radius:999px;padding:.25rem .7rem;margin:.2rem .3rem .2rem 0;font-size:.85rem}
+  section{padding:2.2rem 0}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  h2{font-size:1.6rem;line-height:1.3;margin-top:0}
+  h3{margin-bottom:.3rem}
+  .tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin:1rem 0}
+  .tabs button{padding:.55rem .9rem;font-size:.95rem;cursor:pointer;border:1px solid #94a3b8;background:#fff;border-radius:8px}
+  .tabs button.active{font-weight:700;border:2px solid #ea580c;background:#fff7ed}
+  label{display:block;margin:.7rem 0 .25rem;font-weight:600}
+  input,select{width:100%;padding:.55rem;font-size:1rem;border:1px solid #cbd5e1;border-radius:8px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}.hero h1{font-size:1.7rem}}
+  .calc-btn{margin-top:1.2rem;padding:.7rem 1.5rem;font-size:1rem;cursor:pointer;background:#ea580c;color:#fff;border:0;border-radius:8px;font-weight:700}
+  #results{margin-top:1.25rem;padding:1rem;border:1px solid #fed7aa;background:#fff7ed;border-radius:10px;display:none}
+  #results .big{font-size:1.5rem;font-weight:800;margin:.2rem 0}
+  .shape{display:none}.shape.active{display:block}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  @media(max-width:800px){.grid3{grid-template-columns:1fr}}
+  .tool{border:1px solid #e2e8f0;background:#fff;border-radius:12px;padding:1.2rem}
+  table{width:100%;border-collapse:collapse;background:#fff}
+  th,td{border:1px solid #e2e8f0;padding:.6rem;text-align:left}
+  th{background:#f1f5f9}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  @media(max-width:800px){.steps{grid-template-columns:1fr}}
+  .step{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:1.2rem}
+  footer{background:#111827;color:#cbd5e1;padding:2rem 0}
+  footer a{color:#fdba74}
+  .note{font-size:.9rem;color:#475569}
 </style>
 </head>
 <body>
-  <h1>Concrete Volume Calculator</h1>
-  <p>Pick a shape, enter dimensions, and get cubic yards, an order quantity with waste buffer, and bag counts.</p>
+<header><div class="wrap">
+  <a class="logo" href="https://concretecalcus.com/">ConcreteCalcus — Free Tools</a>
+  <nav><a href="#calculator">Calculator</a><a href="#tools">All 30 Tools</a><a href="#formulas">Formulas</a><a href="#faq">FAQ</a></nav>
+  <a class="cta" href="https://concretecalcus.com/">Use All 30 Calculators &rarr;</a>
+</div></header>
 
+<section class="hero"><div class="wrap">
+  <p><strong>Next-Gen Construction Calculation Engine &bull; 30 Free Tools</strong></p>
+  <h1>Concrete Calculator: cubic yards, bag counts &amp; truck loads in seconds</h1>
+  <p>Instant cubic yards, exact commercial bag yields, ready-mix truck dispatch and project costs — powered by verified ASTM &amp; ACI geometric formulas. 100% free, zero registration, and all math runs in your browser.</p>
+  <p><a class="cta" href="https://concretecalcus.com/">Browse All 30 Calculators on ConcreteCalcus</a></p>
+  <p class="badges"><span>30+ production tools</span><span>ASTM / ACI formulas</span><span>100% free</span><span>Zero signup</span><span>Instant, client-side math</span></p>
+</div></section>
+
+<section id="calculator"><div class="wrap"><div class="card">
+  <h2>Free Concrete Volume Calculator</h2>
+  <p>Pick a shape, enter dimensions, choose a waste buffer, and get exact volume plus what to order.</p>
   <div class="tabs" role="tablist">
-    <button class="active" onclick="showShape('slab', this)">Slab</button>
-    <button onclick="showShape('posthole', this)">Post Hole</button>
-    <button onclick="showShape('footing', this)">Trench Footing</button>
-    <button onclick="showShape('wall', this)">Wall</button>
+    <button class="active" onclick="showShape('slab',this)">Slab</button>
+    <button onclick="showShape('footing',this)">Trench Footing</button>
+    <button onclick="showShape('posthole',this)">Post Hole</button>
+    <button onclick="showShape('wall',this)">Wall</button>
+    <button onclick="showShape('column',this)">Round Column</button>
   </div>
 
-  <div id="shape-slab" class="shape active">
+  <div id="shape-slab" class="shape active"><div class="grid2">
     <label>Length (feet)<input id="slab-l" type="number" min="0" step="any" placeholder="e.g. 16"></label>
     <label>Width (feet)<input id="slab-w" type="number" min="0" step="any" placeholder="e.g. 30"></label>
     <label>Thickness (inches)<input id="slab-t" type="number" min="0" step="any" placeholder="e.g. 4"></label>
-  </div>
+  </div></div>
 
-  <div id="shape-posthole" class="shape">
-    <label>Hole diameter (inches)<input id="ph-dia" type="number" min="0" step="any" placeholder="e.g. 12"></label>
-    <label>Hole depth (inches)<input id="ph-depth" type="number" min="0" step="any" placeholder="e.g. 36"></label>
-    <label>Number of holes<input id="ph-count" type="number" min="1" step="1" placeholder="e.g. 6"></label>
-  </div>
-
-  <div id="shape-footing" class="shape">
+  <div id="shape-footing" class="shape"><div class="grid2">
     <label>Trench width (inches)<input id="ft-w" type="number" min="0" step="any" placeholder="e.g. 16"></label>
     <label>Trench depth (inches)<input id="ft-d" type="number" min="0" step="any" placeholder="e.g. 8"></label>
     <label>Trench length (feet)<input id="ft-l" type="number" min="0" step="any" placeholder="e.g. 50"></label>
-  </div>
+  </div></div>
 
-  <div id="shape-wall" class="shape">
+  <div id="shape-posthole" class="shape"><div class="grid2">
+    <label>Hole diameter (inches)<input id="ph-dia" type="number" min="0" step="any" placeholder="e.g. 12"></label>
+    <label>Hole depth (inches)<input id="ph-depth" type="number" min="0" step="any" placeholder="e.g. 36"></label>
+    <label>Number of holes<input id="ph-count" type="number" min="1" step="1" placeholder="e.g. 6"></label>
+  </div></div>
+
+  <div id="shape-wall" class="shape"><div class="grid2">
     <label>Wall length (feet)<input id="w-l" type="number" min="0" step="any" placeholder="e.g. 20"></label>
     <label>Wall height (feet)<input id="w-h" type="number" min="0" step="any" placeholder="e.g. 4"></label>
     <label>Wall thickness (inches)<input id="w-t" type="number" min="0" step="any" placeholder="e.g. 8"></label>
-  </div>
+  </div></div>
+
+  <div id="shape-column" class="shape"><div class="grid2">
+    <label>Column diameter (inches)<input id="c-dia" type="number" min="0" step="any" placeholder="e.g. 12"></label>
+    <label>Column height (feet)<input id="c-h" type="number" min="0" step="any" placeholder="e.g. 8"></label>
+    <label>Number of columns<input id="c-count" type="number" min="1" step="1" placeholder="e.g. 4"></label>
+  </div></div>
 
   <label>Waste buffer
     <select id="waste">
@@ -64,82 +111,129 @@
       <option value="0.15">15% — rough / hand-dug excavation</option>
     </select>
   </label>
-
-  <button class="calc-btn" onclick="calculate()">Calculate</button>
-
+  <button class="calc-btn" onclick="calculate()">Calculate Concrete</button>
   <div id="results" aria-live="polite"></div>
+  <p class="note">Bag yields: 80 lb = 0.60 cu ft &middot; 60 lb = 0.45 cu ft &middot; 50 lb = 0.375 cu ft &middot; 40 lb = 0.30 cu ft. Over ~1.5–2 yd&sup3;, ready-mix delivery usually beats hand-mixing bags. Under ~4 yd&sup3;, expect a short-load fee.</p>
+  <p>For stairs, rebar, block walls, gravel subbase and full project cost estimation, use the complete set of tools at <a href="https://concretecalcus.com/">concretecalcus.com</a>.</p>
+</div></div></section>
 
-  <footer>
-    Bag yields: 80 lb = 0.60 cu ft · 60 lb = 0.45 cu ft · 50 lb = 0.375 cu ft · 40 lb = 0.30 cu ft.
-    Over ~1.5–2 yd³, ready-mix delivery beats hand-mixing bags. Under ~4 yd³ expect a short-load fee.
-    For stairs, columns, rebar, block, gravel, and full cost estimation (30 free tools), see
-    <a href="https://concretecalcus.com/">concretecalcus.com</a>.
-  </footer>
+<section id="tools"><div class="wrap">
+  <h2>All 30 Concrete Calculators — by project type</h2>
+  <p>Use the working calculator above for the five most common shapes. For everything below, the full toolset lives on the main site.</p>
+  <div class="grid3">
+    <div class="tool"><h3>Slabs &amp; Flatwork</h3><p>Rectangular slabs, residential driveways, patios, sidewalks, garage floors, angled triangles and monolithic pads.</p><p><a href="https://concretecalcus.com/">Slab tools on ConcreteCalcus &rarr;</a></p></div>
+    <div class="tool"><h3>Footings &amp; Post Holes</h3><p>Strip footings, isolated spread pads, fence &amp; deck post holes, continuous foundation trenches and excavation volume.</p><p><a href="https://concretecalcus.com/">Footing tools on ConcreteCalcus &rarr;</a></p></div>
+    <div class="tool"><h3>Walls, Columns &amp; Stairs</h3><p>Poured basement walls, retaining stem walls, round sonotube piers, grade beams, highway curbs and concrete stairs.</p><p><a href="https://concretecalcus.com/">Wall &amp; stair tools on ConcreteCalcus &rarr;</a></p></div>
+    <div class="tool"><h3>Volume &amp; Conversion</h3><p>Precision cubic yardage, volume calculators, wet concrete weight, unit conversion and transit mixer truck dispatch.</p><p><a href="https://concretecalcus.com/">Volume tools on ConcreteCalcus &rarr;</a></p></div>
+    <div class="tool"><h3>Bags &amp; Mix Ratios</h3><p>Pre-mixed commercial bag counts across 40, 50, 60 and 80 lb sacks, plus volumetric site batching ratios (1:2:3, 1:2:4).</p><p><a href="https://concretecalcus.com/">Bag tools on ConcreteCalcus &rarr;</a></p></div>
+    <div class="tool"><h3>Rebar, Block &amp; Cost</h3><p>Standard ASTM rebar schedules (#3 to #8), CMU block wall counts, Type S/N mortar, crushed gravel subbase and complete project budgeting.</p><p><a href="https://concretecalcus.com/">Rebar, block &amp; cost tools on ConcreteCalcus &rarr;</a></p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step"><h3>1. Input structural dimensions</h3><p>Select your shape geometry (rectangle, cylinder, trench or wall) and enter dimensions in imperial units. The main site also supports feet, inches, yards, meters and centimeters.</p></div>
+    <div class="step"><h3>2. Automated normalization &amp; waste</h3><p>The engine converts all inputs to baseline cubic feet, computes theoretical volume, and adds your custom waste contingency (5%–15%). This protects against uneven subgrade and form deflection.</p></div>
+    <div class="step"><h3>3. Instant material takeoff</h3><p>Receive immediate ready-mix cubic yards, exact bag counts across standard packaging, and cost projections — ready to call your concrete supplier or visit the hardware store.</p></div>
+  </div>
+</div></section>
+
+<section id="formulas"><div class="wrap">
+  <h2>Formulas, bag yields &amp; thickness guide</h2>
+  <h3>Zero black-box math</h3>
+  <p>Every calculation displays the exact formula used. No hidden assumptions or mysterious markups. Ready-mix volume conversions use 27 cubic feet per cubic yard, assuming standard normal-weight concrete density of 145–150 lbs/cu ft (ASTM C94).</p>
+  <table>
+    <tr><th>Shape</th><th>Formula (cubic feet, before ÷ 27)</th></tr>
+    <tr><td>Slab</td><td>L (ft) &times; W (ft) &times; (Thickness (in) &divide; 12)</td></tr>
+    <tr><td>Trench footing</td><td>(Width (in) &divide; 12) &times; (Depth (in) &divide; 12) &times; Length (ft)</td></tr>
+    <tr><td>Post hole / column</td><td>&pi; &times; (Diameter (in) &divide; 24)&sup2; &times; Depth or Height (ft) &times; count</td></tr>
+    <tr><td>Wall</td><td>Length (ft) &times; Height (ft) &times; (Thickness (in) &divide; 12)</td></tr>
+    <tr><td>Order quantity</td><td>Cubic yards &times; (1 + waste %)</td></tr>
+  </table>
+  <h3>Commercial bag yields (verified ASTM yields)</h3>
+  <table>
+    <tr><th>Bag size</th><th>Yield per bag</th></tr>
+    <tr><td>80 lb</td><td>0.60 cu ft</td></tr>
+    <tr><td>60 lb</td><td>0.45 cu ft</td></tr>
+    <tr><td>50 lb</td><td>0.375 cu ft</td></tr>
+    <tr><td>40 lb</td><td>0.30 cu ft</td></tr>
+  </table>
+  <h3>Typical residential slab thickness</h3>
+  <table>
+    <tr><th>Application</th><th>Typical thickness</th></tr>
+    <tr><td>Walkways &amp; sidewalks</td><td>3.5 to 4 inches</td></tr>
+    <tr><td>Patios &amp; shed floors</td><td>4 inches</td></tr>
+    <tr><td>Standard passenger-car driveways</td><td>4 to 5 inches</td></tr>
+    <tr><td>Heavy-truck driveways &amp; garage slabs</td><td>5 to 6 inches, with rebar reinforcement</td></tr>
+  </table>
+  <h3>Worked examples</h3>
+  <p><strong>10 &times; 10 ft slab at 4 inches:</strong> about 1.23 cubic yards including 10% waste — 56 bags of 80 lb, 74 bags of 60 lb, or 89 bags of 50 lb mix.</p>
+  <p><strong>16 &times; 30 ft slab at 4 inches:</strong> 160 cu ft &divide; 27 = 5.93 yd&sup3; exact, 6.52 yd&sup3; to order with 10% waste — 267 bags of 80 lb (or 356 of 60 lb) if bag-mixed.</p>
+  <h3>Ready-mix truck vs. bags</h3>
+  <p>As a contractor rule of thumb, projects over ~1.5 to 2 cubic yards (60–90 eighty-pound bags) are significantly easier, faster and more cost-effective with a ready-mix truck. Hand-mixing 90+ bags requires heavy labor and risks cold joints. A standard transit mixer carries 10 yd&sup3;; plan multiple trucks above that. An estimation error of just 1/2 inch in slab thickness can cause an 11% volume shortfall, leading to short-load surcharges ($120–$250) or cold joints — which is why the waste buffer matters.</p>
+  <p class="note"><strong>Professional safety:</strong> for load-bearing foundations, retaining walls over 4 feet, or structural columns, always consult a licensed structural engineer and local building codes. This page gives material volumetric math, not certified structural engineering.</p>
+  <p><a class="cta" href="https://concretecalcus.com/">Get the full cost, rebar &amp; block calculators &rarr;</a></p>
+</div></section>
+
+<section id="faq"><div class="wrap"><div class="card">
+  <h2>Frequently asked questions</h2>
+  <h3>How do I calculate how many cubic yards of concrete I need?</h3>
+  <p>Multiply length (ft) &times; width (ft) &times; (thickness (in) &divide; 12), divide the cubic feet by 27, then add 10% for waste and uneven subgrade.</p>
+  <h3>How many bags of concrete do I need for a 10&times;10 slab?</h3>
+  <p>A 10&times;10 ft slab at 4 inches needs about 1.23 cubic yards including 10% waste: 56 bags of 80 lb, 74 bags of 60 lb, or 89 bags of 50 lb mix.</p>
+  <h3>How much extra concrete waste should I order?</h3>
+  <p>Order 10% extra for standard slabs, driveways and footings. For rough, hand-dug post holes or irregular excavations, increase waste contingency to 15%. Ordering exact theoretical volume almost always leaves you short.</p>
+  <h3>When should I order a ready-mix truck instead of bags?</h3>
+  <p>Above ~1.5 to 2 cubic yards (60–90 eighty-pound bags), a ready-mix truck is usually cheaper per yard, faster, and avoids cold joints.</p>
+  <h3>How thick should a residential concrete slab be?</h3>
+  <p>Walkways 3.5–4 in, patios 4 in, passenger-car driveways 4–5 in, heavy-truck driveways and garage slabs 5–6 in with rebar.</p>
+  <h3>What if my order is under 4 cubic yards?</h3>
+  <p>Expect a short-load delivery fee — combine small pours when possible, or bag-mix very small jobs.</p>
+  <p>More answers and all 30 tools: <a href="https://concretecalcus.com/">concretecalcus.com</a></p>
+</div></div></section>
+
+<footer><div class="wrap">
+  <p><strong>Concrete Calculator — free estimator guide.</strong> For stairs, columns, rebar, block, gravel and full project cost estimation (30 free tools, no signup), visit the main site:</p>
+  <p><a href="https://concretecalcus.com/">concretecalcus.com</a></p>
+  <p class="note">Material estimates only. For structural work, consult a licensed engineer and your local building code.</p>
+</div></footer>
 
 <script>
-let currentShape = 'slab';
-function showShape(name, btn) {
-  currentShape = name;
-  document.querySelectorAll('.shape').forEach(el => el.classList.remove('active'));
-  document.getElementById('shape-' + name).classList.add('active');
-  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+let currentShape='slab';
+function showShape(name,btn){
+  currentShape=name;
+  document.querySelectorAll('.shape').forEach(el=>el.classList.remove('active'));
+  document.getElementById('shape-'+name).classList.add('active');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
 }
-function val(id) { return parseFloat(document.getElementById(id).value); }
-
-function cubicFeet() {
-  if (currentShape === 'slab') {
-    const L = val('slab-l'), W = val('slab-w'), T = val('slab-t');
-    if (!(L > 0 && W > 0 && T > 0)) return null;
-    return L * W * (T / 12);
-  }
-  if (currentShape === 'posthole') {
-    const dia = val('ph-dia'), depth = val('ph-depth'), n = val('ph-count');
-    if (!(dia > 0 && depth > 0 && n > 0)) return null;
-    return Math.PI * Math.pow(dia / 24, 2) * (depth / 12) * n;
-  }
-  if (currentShape === 'footing') {
-    const w = val('ft-w'), d = val('ft-d'), l = val('ft-l');
-    if (!(w > 0 && d > 0 && l > 0)) return null;
-    return (w / 12) * (d / 12) * l;
-  }
-  if (currentShape === 'wall') {
-    const l = val('w-l'), h = val('w-h'), t = val('w-t');
-    if (!(l > 0 && h > 0 && t > 0)) return null;
-    return l * h * (t / 12);
-  }
+function val(id){return parseFloat(document.getElementById(id).value);}
+function cubicFeet(){
+  if(currentShape==='slab'){const L=val('slab-l'),W=val('slab-w'),T=val('slab-t');if(!(L>0&&W>0&&T>0))return null;return L*W*(T/12);}
+  if(currentShape==='footing'){const w=val('ft-w'),d=val('ft-d'),l=val('ft-l');if(!(w>0&&d>0&&l>0))return null;return (w/12)*(d/12)*l;}
+  if(currentShape==='posthole'){const dia=val('ph-dia'),dep=val('ph-depth'),n=val('ph-count');if(!(dia>0&&dep>0&&n>0))return null;return Math.PI*Math.pow(dia/24,2)*(dep/12)*n;}
+  if(currentShape==='wall'){const l=val('w-l'),h=val('w-h'),t=val('w-t');if(!(l>0&&h>0&&t>0))return null;return l*h*(t/12);}
+  if(currentShape==='column'){const dia=val('c-dia'),h=val('c-h'),n=val('c-count');if(!(dia>0&&h>0&&n>0))return null;return Math.PI*Math.pow(dia/24,2)*h*n;}
   return null;
 }
-
-function calculate() {
-  const box = document.getElementById('results');
-  const cuft = cubicFeet();
-  if (cuft === null) {
-    box.style.display = 'block';
-    box.innerHTML = '<p>Please enter positive numbers for all dimensions.</p>';
-    return;
-  }
-  const waste = parseFloat(document.getElementById('waste').value);
-  const yards = cuft / 27;
-  const order = yards * (1 + waste);
-  const bags = {
-    '80 lb': Math.ceil(cuft / 0.60),
-    '60 lb': Math.ceil(cuft / 0.45),
-    '50 lb': Math.ceil(cuft / 0.375),
-    '40 lb': Math.ceil(cuft / 0.30)
-  };
-  let truckNote = '';
-  if (order >= 10) truckNote = '<p><em>Note:</em> over one full 10-yd³ mixer load — plan multiple trucks or split pours.</p>';
-  else if (order < 4) truckNote = '<p><em>Note:</em> under ~4 yd³ usually incurs a short-load delivery fee ($75–$120).</p>';
-
-  box.style.display = 'block';
-  box.innerHTML =
-    '<p class="big">' + yards.toFixed(2) + ' cubic yards</p>' +
-    '<p>' + cuft.toFixed(1) + ' cubic feet</p>' +
-    '<p><strong>Order (with ' + Math.round(waste * 100) + '% waste):</strong> ' + order.toFixed(2) + ' cubic yards</p>' +
-    '<p><strong>Bags:</strong> ' + bags['80 lb'] + ' × 80 lb · ' + bags['60 lb'] + ' × 60 lb · ' +
-      bags['50 lb'] + ' × 50 lb · ' + bags['40 lb'] + ' × 40 lb</p>' +
-    truckNote;
+function calculate(){
+  const box=document.getElementById('results');
+  const cuft=cubicFeet();
+  if(cuft===null){box.style.display='block';box.innerHTML='<p>Please enter positive numbers for all dimensions.</p>';return;}
+  const waste=parseFloat(document.getElementById('waste').value);
+  const yards=cuft/27, order=yards*(1+waste), m3=cuft*0.0283168;
+  const bags={'80 lb':Math.ceil(cuft/0.60),'60 lb':Math.ceil(cuft/0.45),'50 lb':Math.ceil(cuft/0.375),'40 lb':Math.ceil(cuft/0.30)};
+  let note='';
+  if(order>=10) note='<p><em>Note:</em> over one full 10-yd&sup3; mixer load — plan multiple trucks or split pours.</p>';
+  else if(order<4) note='<p><em>Note:</em> under ~4 yd&sup3; usually incurs a short-load delivery fee.</p>';
+  box.style.display='block';
+  box.innerHTML='<p class="big">'+yards.toFixed(2)+' cubic yards</p>'
+    +'<p>'+cuft.toFixed(1)+' cubic feet &middot; '+m3.toFixed(2)+' cubic meters</p>'
+    +'<p><strong>Order (with '+Math.round(waste*100)+'% waste):</strong> '+order.toFixed(2)+' cubic yards</p>'
+    +'<p><strong>Bags (exact volume, rounded up):</strong> '+bags['80 lb']+' &times; 80 lb &middot; '+bags['60 lb']+' &times; 60 lb &middot; '+bags['50 lb']+' &times; 50 lb &middot; '+bags['40 lb']+' &times; 40 lb</p>'
+    +'<p><strong>Trucks (10 yd&sup3; each):</strong> '+Math.ceil(order/10)+'</p>'+note
+    +'<p>Full toolset, including stairs, rebar, block and cost: <a href="https://concretecalcus.com/">concretecalcus.com</a></p>';
 }
 </script>
 </body>
